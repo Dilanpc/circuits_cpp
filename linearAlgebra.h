@@ -23,6 +23,7 @@ public:
     Matrix operator+(Matrix matrix);
     Matrix operator-(Matrix matrix);
     Matrix operator*(Matrix matrix);
+    Matrix operator/(Matrix matrix);
     Matrix operator*(double scalar);
     Matrix operator/(double scalar);
 
@@ -32,6 +33,7 @@ public:
     double det(){ return determinant(); }
     Matrix inverse();
     Matrix inv(){ return inverse(); }
+    Matrix solve(Matrix matrix){ return inverse() * matrix; }
 
     friend std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
     {
@@ -120,6 +122,11 @@ Matrix Matrix::operator*(Matrix matrix)
     return result;
 }
 
+Matrix Matrix::operator/(Matrix matrix)
+{
+    return (*this) * matrix.inverse();
+}
+
 Matrix Matrix::operator*(double scalar)
 {
     Matrix result(size(), at(0).size());
@@ -188,6 +195,7 @@ double Matrix::determinant(Matrix matrix)
         return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
     }
 
+    // Method: Cofactors
     double det = 0;
     for (int i=0; i<matrix.size(); i++)
     {
@@ -214,6 +222,7 @@ Matrix Matrix::inverse()
         throw "Matrix is singular";
     }
     Matrix result(size(), at(0).size());
+    // method: Adjugate matrix
     for (int i=0; i<size(); i++)
     {
         for (int j=0; j<at(0).size(); j++)
@@ -223,3 +232,5 @@ Matrix Matrix::inverse()
     }
     return result.transpose();
 }
+
+
