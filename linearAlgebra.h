@@ -35,6 +35,11 @@ public:
     Matrix inv(){ return inverse(); }
     Matrix solve(Matrix matrix){ return inverse() * matrix; }
 
+    void identity();
+    void stack(Matrix matrix, bool vertical);
+
+
+
     friend std::ostream& operator<<(std::ostream& os, const Matrix& matrix)
     {
         for (int i=0; i<matrix.size(); i++)
@@ -234,3 +239,35 @@ Matrix Matrix::inverse()
 }
 
 
+void Matrix::identity()
+{
+    for (int i=0; i<size(); i++)
+    {
+        for (int j=0; j<at(0).size(); j++)
+        {
+            at(i)[j] = (i == j ? 1 : 0);
+        }
+    }
+}
+
+
+void Matrix::stack(Matrix matrix, bool vertical)
+{
+    if (vertical)
+    {
+        if (at(0).size() != matrix.at(0).size()){
+            throw "Matrix dimensions must agree";
+        }
+        insert(end(), matrix.begin(), matrix.end());
+    }
+    else
+    {
+        if (size() != matrix.size()){
+            throw "Matrix dimensions must agree";
+        }
+        for (int i=0; i<size(); i++)
+        {
+            at(i).insert(at(i).end(), matrix[i].begin(), matrix[i].end());
+        }
+    }
+}
