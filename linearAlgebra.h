@@ -14,6 +14,7 @@ double round(double value, int decimalPlaces) {
 class Matrix : public vector<vector<double>>
 {
 public:
+    Matrix() : vector<vector<double>>(){};
     Matrix(int rows, int cols);
     Matrix(vector<double> vector);
     Matrix(vector<vector<double>> matrix);
@@ -204,7 +205,7 @@ double Matrix::determinant(Matrix matrix)
     double det = 0;
     for (int i=0; i<matrix.size(); i++)
     {
-        det += (i%2 ? -1 : 1) * matrix[0][i] * determinant(minor(0, i));
+        det += (i%2 ? -1 : 1) * matrix[0][i] * determinant(matrix.minor(0, i));
     }
     return det;
 }

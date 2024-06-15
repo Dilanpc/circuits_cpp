@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include "linearAlgebra.h"
+
 
 using std::vector, std::string;
 
@@ -17,7 +19,20 @@ public:
     vector<Node*> nodes;
     vector<Component*> components;
 
+    Matrix solve();
+
     friend std::ostream& operator<<(std::ostream& os, const Circuit& circuit);
+
+public: // This method will be private after testing
+    Matrix incidenceMatrix;
+    Matrix voltageMatrix;
+    Matrix sourcesVector;
+    Matrix componentsMatrix;
+
+    Matrix getIncidenceMatrix();
+    Matrix getVoltageMatrix();
+    Matrix getSourcesVector();
+    Matrix getBranchesMatrix();
 
 protected:
 
@@ -51,6 +66,7 @@ public:
     float value;
     Node* node1;
     Node* node2;
-
+    Node* pos;
+    Node* neg;
     
 };

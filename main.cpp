@@ -11,7 +11,7 @@ int main(int argc, char const *argv[])
     Circuit myCircuit(txt);
 
     cout << myCircuit << endl;
-    cout << myCircuit.nodes.size() << endl;
+    cout << myCircuit.solve() << endl;
 
     return 0;
 }
