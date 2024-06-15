@@ -11,6 +11,18 @@ Circuit::Circuit(string text)
     
 }
 
+Circuit::~Circuit()
+{
+    for (Node* node : nodes)
+    {
+        delete node;
+    }
+    for (Component* component : components)
+    {
+        delete component;
+    }
+}	
+
 vector<string> Circuit::separeComponentsTxt(string text)
 {
     vector<string> componentsTxt;

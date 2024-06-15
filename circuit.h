@@ -15,6 +15,7 @@ class Circuit
 {
 public:
     Circuit(string text);
+    ~Circuit();
 
     vector<Node*> nodes;
     vector<Component*> components;
