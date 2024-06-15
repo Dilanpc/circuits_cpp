@@ -29,11 +29,14 @@ public: // This method will be private after testing
     Matrix voltageMatrix;
     Matrix sourcesVector;
     Matrix componentsMatrix;
+    Matrix solution = Matrix(0, 0);
 
     Matrix getIncidenceMatrix();
     Matrix getVoltageMatrix();
     Matrix getSourcesVector();
     Matrix getBranchesMatrix();
+
+    string textSolution();
 
 protected:
 

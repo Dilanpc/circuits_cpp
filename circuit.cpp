@@ -107,7 +107,8 @@ Matrix Circuit::getIncidenceMatrix()
         {
             if (components[j]->pos == nodes[i]){
                 incidenceMatrix[i-fixIndex][j] = 1;
-            }else if (components[j]->neg == nodes[i]){
+            }
+            else if (components[j]->neg == nodes[i]){
                 incidenceMatrix[i-fixIndex][j] = -1;
             }
         }
@@ -123,7 +124,7 @@ Matrix Circuit::getVoltageMatrix()
     Matrix identity(components.size(), components.size());
     identity.identity();
     voltageMatrix.stack(identity, false);
-    voltageMatrix.stack(incidenceMatrix.transpose(), false);
+    voltageMatrix.stack(-1*incidenceMatrix.transpose(), false);
 
     return voltageMatrix;
 }
@@ -139,7 +140,7 @@ Matrix Circuit::getSourcesVector()
     for (int i=0; i<components.size(); i++)
     {
         if (components[i]->type == 'V'){
-            sources[start+i][0] = -components[i]->value;
+            sources[start+i][0] = components[i]->value;
         }
         else if (components[i]->type == 'I'){
             sources[start+i][0] = components[i]->value;
@@ -193,14 +194,42 @@ Matrix Circuit::solve()
     fullMatrix.stack(componentsMatrix, true);
 
     std::cout << fullMatrix << std::endl;
-    std::cout << "Sources:" << std::endl;
-    std::cout << sourcesVector << std::endl;
 
-    return fullMatrix.solve(sourcesVector);
-
+    solution = fullMatrix.solve(sourcesVector);
+    return solution;
 }
 
 
+
+string Circuit::textSolution()
+{
+    if (solution.size() == 0)
+    {
+        solve();
+    }
+    string text = "";
+    int index = 0;
+    for (auto component : components)
+    {
+        text += component->type + std::to_string(component->id) + " current: " + std::to_string(round(solution[index][0], 3)) + "\n";
+        index++;
+    }
+    for (auto component : components)
+    {
+        text += component->type + std::to_string(component->id) + " voltage: " + std::to_string(round(solution[index][0], 3)) + "\n";
+        index++;
+    }
+    for (auto node : nodes)
+    {
+        if (node->id == 0)
+        {
+            continue;
+        }
+        text += "Node " + std::to_string(node->id) + " voltage: " + std::to_string(round(solution[index][0], 3)) + "\n";
+        index++;
+    }
+    return text;
+}
 
 
 std::ostream& operator<<(std::ostream& os, const Circuit& circuit)
