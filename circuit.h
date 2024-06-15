@@ -1,3 +1,6 @@
+#ifndef CIRCUIT_H
+#define CIRCUIT_H
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -74,3 +77,5 @@ public:
     Node* neg;
     
 };
+
+#endif
