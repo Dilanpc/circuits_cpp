@@ -17,10 +17,9 @@ int main(int argc, char const *argv[])
     const char* smallCircuit = "V1 8 1 0\n"
     "R1 4 1 0";
     
-    Circuit myCircuit(smallCircuit);
-    
+    Circuit myCircuit(bigCircuit);
+  
     cout << myCircuit.textSolution() << endl;
-    
 
-    return 0;
+
 }

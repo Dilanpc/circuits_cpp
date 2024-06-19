@@ -143,7 +143,13 @@ double Matrix::determinant(const Matrix& matrix) const
     {
         det += (i % 2 ? -1 : 1) * matrix[0][i] * determinant(matrix.minor(0, i));
     }
+    
     return det;
+}
+
+double Matrix::det() const
+{
+	return determinant(*this);
 }
 
 double Matrix::determinant() const
@@ -151,8 +157,34 @@ double Matrix::determinant() const
     return determinant(*this);
 }
 
-
 Matrix Matrix::inverse() const
+{
+    // Method: Gauss-Jordan elimination
+    if (size() != at(0).size())
+    {
+        throw "Matrix must be square";
+    }
+
+    int rowCount= size();
+    Matrix matrix(*this);
+    matrix.stack(Matrix::identity(rowCount), false);
+
+    matrix.gauss();
+
+
+    Matrix result(rowCount, rowCount);
+    for (int i=0; i<rowCount; i++)
+	{
+		for (int j=0; j<rowCount; j++)
+		{
+            result[i][j] = matrix.at(i)[j + rowCount];
+		}
+	}
+    return result;
+
+}
+
+Matrix Matrix::inverseAdjugate() const
 {
     if (size() != at(0).size())
     {
@@ -175,6 +207,90 @@ Matrix Matrix::inverse() const
     return result.transpose();
 }
 
+Matrix Matrix::inv() const {return inverse();}
+
+
+
+void Matrix::gauss()
+{
+    for (int row = 0; row < size(); row++)
+    {
+        // Make pivot = 1
+        if (at(row)[row] == 0)
+		{
+			// look for a row that matrix[x][i] != 0
+            for (int i = row+1; i < size(); i++)
+            {
+                if (at(i)[row] != 0)
+                {
+                    sumRow(row, i);
+                    break;
+                }
+            }
+			if (at(row)[row]==0) throw "Matrix is singular";
+		}
+        multiplyRow(row, 1 / at(row)[row]);
+
+        // Make other rows = 0
+        for (int i = 0; i < size(); i++)
+        {
+            if (i == row || at(i)[row] == 0) continue;
+
+            vector<double> rowToAdd = getRow(row);
+            Matrix::multiplyRow(rowToAdd, -at(i)[row]);
+            sumRow(i, rowToAdd);
+        }
+    }
+}
+
+
+void Matrix::multiplyRow(int row, double scalar)
+{
+    for (int j = 0; j < at(0).size(); j++)
+    {
+        at(row)[j] *= scalar;
+    }
+}
+
+void Matrix::multiplyRow(vector<double>& vec, double scalar) const
+{
+	for (int j = 0; j < vec.size(); j++)
+	{
+		vec[j] *= scalar;
+	}
+}
+
+void Matrix::sumRow(int row1, int row2)
+{
+    for (int j = 0; j < at(0).size(); j++)
+    {
+        at(row1)[j] += at(row2)[j];
+    }
+}
+
+void Matrix::sumRow(int row, const vector<double>& vec)
+{
+    for (int j = 0; j < at(0).size(); j++)
+    {
+        at(row)[j] += vec[j];
+    }
+}
+
+
+Matrix Matrix::solve(const Matrix& _vector) const
+{
+    if (size() != at(0).size())
+	{
+		throw "Matrix must be square";
+	}
+    Matrix matrix(*this);
+    matrix.stack(_vector, false);
+
+    matrix.gauss();
+
+    return Matrix(matrix.getColumn(matrix.at(0).size() - 1)).transpose();
+}
+
 
 void Matrix::identity()
 {
@@ -185,6 +301,13 @@ void Matrix::identity()
             at(i)[j] = (i == j ? 1 : 0);
         }
     }
+}
+
+Matrix Matrix::identity(int size)
+{
+	Matrix result(size, size);
+	result.identity();
+	return result;
 }
 
 
@@ -207,4 +330,20 @@ void Matrix::stack(const Matrix& matrix, bool vertical)
             at(i).insert(at(i).end(), matrix[i].begin(), matrix[i].end());
         }
     }
+}
+
+
+vector<double> Matrix::getRow(const int row) const
+{
+	return at(row);
+}
+
+vector<double> Matrix::getColumn(const int col) const
+{
+	vector<double> column;
+	for (int i = 0; i < size(); i++)
+	{
+		column.push_back(at(i)[col]);
+	}
+	return column;
 }
