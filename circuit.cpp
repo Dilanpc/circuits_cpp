@@ -56,7 +56,7 @@ Node* Circuit::createNode(int id)
 void Circuit::createComponent(string text)
 {
     vector<string> words;
-    string word;
+    string word = "";
     for (char c : text)
     {
         if (c == ' '){
@@ -65,23 +65,24 @@ void Circuit::createComponent(string text)
         }else{
             word += c;
         }
-        
     }
     words.push_back(word);
 
     // find type and id
-    char type;
+    string type="";
     int id;
-    for (int i=0; i<words[0].size(); i++)
-    {
-        if (isalpha(words[0][i]))
-        {
-            type = words[0][i];
-            id = stoi(words[0].substr(i+1));
-            break;
-        }
 
+    if (isalpha(words[0][0]) && !isalpha(words[0][1]))
+    {
+        type = words[0][0];
+        id = stoi(words[0].substr(1));
     }
+    else // Depending source
+    {
+        readDependentSource(words);
+        return;
+    }
+
     Component* component = new Component(
         type,
         id,
@@ -90,6 +91,49 @@ void Circuit::createComponent(string text)
         createNode(stoi(words[3]))  // Node 2
     );
     components.push_back(component);
+}
+
+void Circuit::readDependentSource(vector<string> words)
+{
+    string type = words[0].substr(0,4);
+    int id = stoi(words[0].substr(4));
+
+    float value = 0;
+    string referenceName = "";
+    string valueTxt = "";
+    for (int i=0; i<words[1].size(); i++) // Seapare value and reference
+	{
+        if (isdigit(words[1][i]) || words[1][i] == '.')
+		    valueTxt += words[1][i];
+        else
+        {
+            value = stof(valueTxt);
+            referenceName = words[1].substr(i);
+            break;
+        }
+	}
+    Component* component = new Component(
+		type,
+		id,
+		value,
+		createNode(stoi(words[2])),
+		createNode(stoi(words[3])),
+		referenceName
+	);
+	components.push_back(component);
+}
+
+int Circuit::findComponent(const string referenceName) const
+{
+	for (int i=0; i<components.size(); i++)
+	{
+        string name = components[i]->type + std::to_string(components[i]->id);
+		if (name == referenceName)
+		{
+			return i;
+		}
+	}
+	return -1;
 }
 
 
@@ -139,10 +183,7 @@ Matrix Circuit::getSourcesVector()
 
     for (int i=0; i<components.size(); i++)
     {
-        if (components[i]->type == 'V'){
-            sources[start+i][0] = components[i]->value;
-        }
-        else if (components[i]->type == 'I'){
+        if (components[i]->type == "V" || components[i]->type == "I"){
             sources[start+i][0] = components[i]->value;
         }
     }
@@ -159,15 +200,20 @@ Matrix Circuit::getBranchesMatrix()
 
     for (int i=0; i<components.size(); i++)
     {
-        if (components[i]->type == 'V'){
+        if (components[i]->type == "V") {
             voltages[i][i] = 1;
         }
-        else if (components[i]->type == 'R'){
+        else if (components[i]->type == "R") {
             incidences[i][i] = 1;
             voltages[i][i] = -1 / components[i]->value;
         }
-        else if (components[i]->type == 'I'){
+        else if (components[i]->type == "I") {
             incidences[i][i] = 1;
+        }
+        else if (components[i]->type == "VCVS") {
+            int reference = findComponent(components[i]->referenceName);
+            voltages[i][i] = 1;
+            voltages[i][reference] = -components[i]->value;
         }
     }
     componentsMatrix = incidences;
@@ -248,16 +294,12 @@ std::ostream& operator<<(std::ostream& os, const Circuit& circuit)
 
 // COMPONENT
 
-Component::Component(const char type, int id, const float value, Node* node1, Node* node2)
+Component::Component(const string type, const int id, const float value, Node* node1, Node* node2, string referenceName)
+    : type(type), id(id), value(value),
+    node1(node1), node2(node2), referenceName(referenceName),
+    pos(node1), neg(node2)
 {
-    this->type = type;
-    this->id = id;
-    this->value = value;
-    this->node1 = node1;
-    this->node2 = node2;
 
-    this->pos = node1;
-    this->neg = node2;
 }
 
 

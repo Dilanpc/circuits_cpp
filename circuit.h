@@ -47,6 +47,8 @@ private:
     vector<string> separeComponentsTxt(string text);
     void createComponent(string text);
     Node* createNode(int id);
+    void readDependentSource(vector<string> words);
+    int findComponent(const string referenceName) const;
 
 };
 
@@ -66,16 +68,19 @@ public:
 class Component
 {
 public:
-    Component(char type, int id, float value, Node* node1, Node* node2);
+    Component(const string type, const int id, const float value, Node* node1, Node* node2, string referenceName = "");
 
-    char type;
-    int id;
-    float value;
+    const string type;
+    const int id;
+    const float value;
     Node* node1;
     Node* node2;
     Node* pos;
     Node* neg;
+    string referenceName; // For dependent sources
     
 };
+
+
 
 #endif
