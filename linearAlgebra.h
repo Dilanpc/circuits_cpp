@@ -7,21 +7,20 @@
 #include <iostream>
 
 
-using std::vector;
 
 double round(double value, int decimalPlaces);
 
 
 
-class Matrix : public vector<vector<double>>
+class Matrix : public std::vector<std::vector<double>>
 {
 public:
-    Matrix() : vector<vector<double>>(){};
+    Matrix() : std::vector<std::vector<double>>(){};
     Matrix(int rows, int cols);
-    Matrix(const vector<double>& _vector);
-    Matrix(const vector<vector<double>>& matrix);
+    Matrix(const std::vector<double>& _vector);
+    Matrix(const std::vector<std::vector<double>>& matrix);
     Matrix(const std::initializer_list<std::initializer_list<double>>& list)
-        : vector<vector<double>>(list.begin(), list.end()) {}
+        : std::vector<std::vector<double>>(list.begin(), list.end()) {}
 
     Matrix operator+(const Matrix& matrix) const;
     Matrix operator*(const Matrix& matrix) const;
@@ -43,8 +42,8 @@ public:
     static Matrix identity(int size);
     void stack(const Matrix& matrix, bool vertical);
 
-    vector<double> getRow(const int row) const;
-    vector<double> getColumn(const int col) const;
+    std::vector<double> getRow(const int row) const;
+    std::vector<double> getColumn(const int col) const;
 
 
 
@@ -71,9 +70,9 @@ protected:
 
 
     void multiplyRow(int row, double scalar);
-    void multiplyRow(vector<double>& _vector, double scalar) const;
+    void multiplyRow(std::vector<double>& _vector, double scalar) const;
     void sumRow(int row1, int row2);
-    void sumRow(int row, const vector<double>& _vector);
+    void sumRow(int row, const std::vector<double>& _vector);
 
 
 };
@@ -81,11 +80,11 @@ protected:
 
 
 
-inline Matrix::Matrix(int rows, int cols) : vector<vector<double>>(rows, vector<double>(cols)){}
+inline Matrix::Matrix(int rows, int cols) : std::vector<std::vector<double>>(rows, std::vector<double>(cols)){}
 
-inline Matrix::Matrix(const vector<double>& _vector) : vector<vector<double>>(1, _vector){}
+inline Matrix::Matrix(const std::vector<double>& _vector) : std::vector<std::vector<double>>(1, _vector){}
 
-inline Matrix::Matrix(const vector<vector<double>>& matrix) : vector<vector<double>>(matrix){}
+inline Matrix::Matrix(const std::vector<std::vector<double>>& matrix) : std::vector<std::vector<double>>(matrix){}
 
 
 Matrix operator*(double scalar, const Matrix& matrix);

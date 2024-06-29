@@ -8,8 +8,6 @@
 #include "linearAlgebra.h"
 
 
-using std::vector, std::string;
-
 class Node;
 class Component;
 
@@ -17,11 +15,11 @@ class Component;
 class Circuit
 {
 public:
-    Circuit(string text);
+    Circuit(std::string text);
     ~Circuit();
 
-    vector<Node*> nodes;
-    vector<Component*> components;
+    std::vector<Node*> nodes;
+    std::vector<Component*> components;
 
     Matrix solve();
 
@@ -39,16 +37,16 @@ public: // This method will be private after testing
     Matrix getSourcesVector();
     Matrix getBranchesMatrix();
 
-    string textSolution();
+    std::string textSolution();
 
 protected:
 
 private:
-    vector<string> separeComponentsTxt(string text);
-    void createComponent(string text);
+    std::vector<std::string> separeComponentsTxt(std::string text);
+    void createComponent(std::string text);
     Node* createNode(int id);
-    void readDependentSource(vector<string> words);
-    int findComponent(const string referenceName) const;
+    void readDependentSource(std::vector<std::string> words);
+    int findComponent(const std::string referenceName) const;
 
 };
 
@@ -59,7 +57,7 @@ class Node
 public:
     Node(int id);
 
-    vector<Component*> components;
+    std::vector<Component*> components;
     int id;
 };
 
@@ -68,16 +66,16 @@ public:
 class Component
 {
 public:
-    Component(const string type, const int id, const float value, Node* node1, Node* node2, string referenceName = "");
+    Component(const std::string type, const int id, const float value, Node* node1, Node* node2, std::string referenceName = "");
 
-    const string type;
+    const std::string type;
     const int id;
     const float value;
     Node* node1;
     Node* node2;
     Node* pos;
     Node* neg;
-    string referenceName; // For dependent sources
+    std::string referenceName; // For dependent sources
     
 };
 

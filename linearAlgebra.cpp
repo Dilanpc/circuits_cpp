@@ -236,7 +236,7 @@ void Matrix::gauss()
         {
             if (i == row || at(i)[row] == 0) continue;
 
-            vector<double> rowToAdd = getRow(row);
+            std::vector<double> rowToAdd = getRow(row);
             Matrix::multiplyRow(rowToAdd, -at(i)[row]);
             sumRow(i, rowToAdd);
         }
@@ -252,7 +252,7 @@ void Matrix::multiplyRow(int row, double scalar)
     }
 }
 
-void Matrix::multiplyRow(vector<double>& vec, double scalar) const
+void Matrix::multiplyRow(std::vector<double>& vec, double scalar) const
 {
 	for (int j = 0; j < vec.size(); j++)
 	{
@@ -268,7 +268,7 @@ void Matrix::sumRow(int row1, int row2)
     }
 }
 
-void Matrix::sumRow(int row, const vector<double>& vec)
+void Matrix::sumRow(int row, const std::vector<double>& vec)
 {
     for (int j = 0; j < at(0).size(); j++)
     {
@@ -333,14 +333,14 @@ void Matrix::stack(const Matrix& matrix, bool vertical)
 }
 
 
-vector<double> Matrix::getRow(const int row) const
+std::vector<double> Matrix::getRow(const int row) const
 {
 	return at(row);
 }
 
-vector<double> Matrix::getColumn(const int col) const
+std::vector<double> Matrix::getColumn(const int col) const
 {
-	vector<double> column;
+    std::vector<double> column;
 	for (int i = 0; i < size(); i++)
 	{
 		column.push_back(at(i)[col]);

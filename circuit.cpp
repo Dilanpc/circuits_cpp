@@ -1,10 +1,10 @@
 #include "circuit.h"
 
 // CIRCUIT
-Circuit::Circuit(string text)
+Circuit::Circuit(std::string text)
 {
-    vector<string> componentsTxt = separeComponentsTxt(text);
-    for (string componentTxt : componentsTxt)
+    std::vector<std::string> componentsTxt = separeComponentsTxt(text);
+    for (std::string componentTxt : componentsTxt)
     {
         createComponent(componentTxt);
     }
@@ -23,10 +23,10 @@ Circuit::~Circuit()
     }
 }	
 
-vector<string> Circuit::separeComponentsTxt(string text)
+std::vector<std::string> Circuit::separeComponentsTxt(std::string text)
 {
-    vector<string> componentsTxt;
-    string word; 
+    std::vector<std::string> componentsTxt;
+    std::string word;
     for (char c : text)
     {
         if (c == '\n'){
@@ -53,10 +53,10 @@ Node* Circuit::createNode(int id)
     return nodes.back();
 }
 
-void Circuit::createComponent(string text)
+void Circuit::createComponent(std::string text)
 {
-    vector<string> words;
-    string word = "";
+    std::vector<std::string> words;
+    std::string word = "";
     for (char c : text)
     {
         if (c == ' '){
@@ -69,7 +69,7 @@ void Circuit::createComponent(string text)
     words.push_back(word);
 
     // find type and id
-    string type="";
+    std::string type="";
     int id;
 
     if (isalpha(words[0][0]) && !isalpha(words[0][1]))
@@ -93,14 +93,14 @@ void Circuit::createComponent(string text)
     components.push_back(component);
 }
 
-void Circuit::readDependentSource(vector<string> words)
+void Circuit::readDependentSource(std::vector<std::string> words)
 {
-    string type = words[0].substr(0,4);
+    std::string type = words[0].substr(0,4);
     int id = stoi(words[0].substr(4));
 
     float value = 0;
-    string referenceName = "";
-    string valueTxt = "";
+    std::string referenceName = "";
+    std::string valueTxt = "";
     for (int i=0; i<words[1].size(); i++) // Seapare value and reference
 	{
         if (isdigit(words[1][i]) || words[1][i] == '.')
@@ -123,11 +123,11 @@ void Circuit::readDependentSource(vector<string> words)
 	components.push_back(component);
 }
 
-int Circuit::findComponent(const string referenceName) const
+int Circuit::findComponent(const std::string referenceName) const
 {
 	for (int i=0; i<components.size(); i++)
 	{
-        string name = components[i]->type + std::to_string(components[i]->id);
+        std::string name = components[i]->type + std::to_string(components[i]->id);
 		if (name == referenceName)
 		{
 			return i;
@@ -247,13 +247,13 @@ Matrix Circuit::solve()
 
 
 
-string Circuit::textSolution()
+std::string Circuit::textSolution()
 {
     if (solution.size() == 0)
     {
         solve();
     }
-    string text = "";
+    std::string text = "";
     int index = 0;
     for (auto component : components)
     {
@@ -294,7 +294,7 @@ std::ostream& operator<<(std::ostream& os, const Circuit& circuit)
 
 // COMPONENT
 
-Component::Component(const string type, const int id, const float value, Node* node1, Node* node2, string referenceName)
+Component::Component(const std::string type, const int id, const float value, Node* node1, Node* node2, std::string referenceName)
     : type(type), id(id), value(value),
     node1(node1), node2(node2), referenceName(referenceName),
     pos(node1), neg(node2)
