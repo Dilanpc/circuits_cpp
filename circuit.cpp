@@ -55,6 +55,7 @@ Node* Circuit::createNode(int id)
 
 void Circuit::createComponent(std::string text)
 {
+    // separe words
     std::vector<std::string> words;
     std::string word = "";
     for (char c : text)
@@ -87,8 +88,8 @@ void Circuit::createComponent(std::string text)
         type,
         id,
         stof(words[1]), // Value
-        createNode(stoi(words[2])), // Node 1
-        createNode(stoi(words[3]))  // Node 2
+        createNode(stoi(words[2])), // Node 1 +
+        createNode(stoi(words[3]))  // Node 2 -
     );
     components.push_back(component);
 }
@@ -214,6 +215,11 @@ Matrix Circuit::getBranchesMatrix()
             int reference = findComponent(components[i]->referenceName);
             voltages[i][i] = 1;
             voltages[i][reference] = -components[i]->value;
+        }
+        else if (components[i]->type == "CCCS") {
+            int reference = findComponent(components[i]->referenceName);
+			incidences[i][i] = 1;
+			incidences[i][reference] = -components[i]->value;
         }
     }
     componentsMatrix = incidences;

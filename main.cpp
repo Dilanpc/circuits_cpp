@@ -17,9 +17,9 @@ const char* bigCircuit = "I1 8 1 0\n"
 const char* smallCircuit = "V1 8 1 0\n"
 "R1 4 1 0";
 
-const char* dependentCircuit = "V1 8 1 0\n"
-    "R1 4 1 2\n"
-    "VCVS1 2V1 2 0";
+const char* dependentCircuit = "I1 1 0 1\n"
+    "R1 20 1 0\n"
+    "CCCS1 2I1 0 1";
 
 
 int main(int argc, char const *argv[])
@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
         }
     }
 	else {
-		myCircuit = new Circuit(bigCircuit);
+		myCircuit = new Circuit(dependentCircuit);
 	}
 
     cout << myCircuit->textSolution() << endl;
