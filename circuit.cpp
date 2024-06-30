@@ -104,7 +104,7 @@ void Circuit::readDependentSource(std::vector<std::string> words)
     std::string valueTxt = "";
     for (int i=0; i<words[1].size(); i++) // Seapare value and reference
 	{
-        if (isdigit(words[1][i]) || words[1][i] == '.')
+        if (isdigit(words[1][i]) || words[1][i] == '.' || words[1][i] == '-')
 		    valueTxt += words[1][i];
         else
         {
@@ -220,6 +220,16 @@ Matrix Circuit::getBranchesMatrix()
             int reference = findComponent(components[i]->referenceName);
 			incidences[i][i] = 1;
 			incidences[i][reference] = -components[i]->value;
+        }
+        else if (components[i]->type == "CCVS") {
+            int reference = findComponent(components[i]->referenceName);
+            voltages[i][i] = 1;
+            incidences[i][reference] = -components[i]->value;
+        }
+        else if (components[i]->type == "VCCS") {
+            int reference = findComponent(components[i]->referenceName);
+            incidences[i][i] = 1;
+            voltages[i][reference] = -components[i]->value;
         }
     }
     componentsMatrix = incidences;

@@ -18,8 +18,9 @@ const char* smallCircuit = "V1 8 1 0\n"
 "R1 4 1 0";
 
 const char* dependentCircuit = "I1 1 0 1\n"
-    "R1 20 1 0\n"
-    "CCCS1 2I1 0 1";
+    "R1 60 1 0\n"
+    "VCCS1 -0.2R1 2 0\n"
+    "R2 2 2 0";
 
 
 int main(int argc, char const *argv[])
