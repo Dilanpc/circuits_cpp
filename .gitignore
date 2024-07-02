@@ -1,7 +1,9 @@
 .vscode
 .vs
 *.vcxproj.user
-*.exe
 
 circuitsInCpp/
 x64/
+
+*.exe
+test.txt
