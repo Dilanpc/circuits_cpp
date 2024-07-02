@@ -21,10 +21,11 @@ public:
     std::vector<Component*> components;
 
     Matrix solve();
+    std::string textSolution();
 
     friend std::ostream& operator<<(std::ostream& os, const Circuit& circuit);
 
-public: // This method will be private after testing
+private:
     Matrix incidenceMatrix;
     Matrix voltageMatrix;
     Matrix sourcesVector;
@@ -36,11 +37,7 @@ public: // This method will be private after testing
     Matrix getSourcesVector();
     Matrix getBranchesMatrix();
 
-    std::string textSolution();
 
-protected:
-
-private:
     std::vector<std::string> separeComponentsTxt(std::string text);
     void createComponent(std::string text);
     Node* createNode(int id);

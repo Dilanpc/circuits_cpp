@@ -88,5 +88,6 @@ inline Matrix::Matrix(const std::vector<std::vector<double>>& matrix) : std::vec
 
 
 Matrix operator*(double scalar, const Matrix& matrix);
+Matrix operator/(double scalar, const Matrix& matrix);
 
 #endif

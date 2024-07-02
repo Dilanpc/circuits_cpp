@@ -89,6 +89,8 @@ Matrix Matrix::operator/(double scalar) const
     return (*this) * (1 / scalar);
 }
 
+Matrix operator/(double scalar, const Matrix& matrix) { return matrix * 1 / scalar; }
+
 
 // METHODS
 
